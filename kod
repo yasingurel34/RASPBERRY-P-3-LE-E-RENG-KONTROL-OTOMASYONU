@@ -1,0 +1,103 @@
+import cv2
+import numpy as np
+import time
+
+cap = cv2.VideoCapture(0)
+
+while True:
+    _, frame = cap.read()
+    blur = cv2.blur(frame,(40,40))
+    hsv = cv2.cvtColor(blur, cv2.COLOR_BGR2HSV)
+
+ 
+    #lkirmizi = np.array([127, 97, 131])
+    #ukirmizi = np.array([178, 179, 226])
+    #mask = cv2.inRange(hsv, lkirmizi, ukirmizi)
+ 
+    #resultk = cv2.bitwise_and(frame, frame, mask=mask)
+    #cntsk = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)[-2]
+    #centerk = None
+    
+    
+    lsari = np.array([5, 75, 79])
+    usari = np.array([73, 154, 195])
+    mask = cv2.inRange(hsv, lsari, usari)
+ 
+    resulty = cv2.bitwise_and(frame, frame, mask=mask)
+    cntss = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)[-2]
+    centery = None
+    
+    
+    lmavi = np.array([79,42 ,44 ])
+    umavi = np.array([144, 121, 230])
+    mask = cv2.inRange(hsv, lmavi, umavi)
+ 
+    resultm = cv2.bitwise_and(frame, frame, mask=mask)
+    cntsm = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)[-2]
+    centerm = None
+
+    mavi = 0
+    yesil = 0
+    kirmizi = 0
+    
+    #if len(cntsk) > 0:
+    #    ck = max(cntsk, key=cv2.contourArea)
+    #    ((x, y), radiusk) = cv2.minEnclosingCircle(ck)
+    #    print(radiusk)
+    #    M = cv2.moments(ck)
+    #    if M["m00"] == 0:
+    #        M["m00"]=1
+    #    centerk = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+    #    if radiusk > 75:
+    #        cv2.circle(frame, (int(x), int(y)), int(radiusk+3),(255, 0, 0), 2)
+    #        kirmizi = 1
+    #        mavi = 0
+    #        yesil = 0
+    #       time.sleep(1)
+
+    if len(cntss) > 0:
+        cy = max(cntss, key=cv2.contourArea)
+        ((x, y), radiuss) = cv2.minEnclosingCircle(cs)
+        print(radiuss)
+        My= cv2.moments(cs)
+        if My["m00"] == 0:
+            My["m00"]=1
+        centers = (int(My["m10"] / My["m00"]), int(My["m01"] / My["m00"]))
+        if radiuss > 25:
+            cv2.circle(frame, (int(x), int(y)), int(radiuss+3),(255, 0, 0), 2)
+            sari = 1
+            mavi = 0
+            kirmizi = 0
+            time.sleep(.3)
+            
+    if len(cntsm) > 0:
+        cm = max(cntsm, key=cv2.contourArea)
+        ((x, y), radiusm) = cv2.minEnclosingCircle(cm)
+        print( radiusm)
+        Mm = cv2.moments(cm)
+        if Mm["m00"] == 0:
+            Mm["m00"]=1
+        centerm = (int(Mm["m10"] / Mm["m00"]), int(Mm["m01"] / Mm["m00"]))
+        if radiusm > 155:
+            cv2.circle(frame, (int(x), int(y)), int(radiusm+3),(255, 0, 0), 2)
+            sari = 1
+            yesil = 0
+            kirmizi = 0
+            time.sleep(.3)
+
+    #k=len(cntsk)
+    s=len(cntss)
+    m=len(cntsm)
+      
+    if sari==1:
+        print("sari")
+    if mavi==1:
+        print("mavi")
+            
+    k = cv2.waitKey(5) & 0xFF
+    if k == 27:
+        break
+
+cv2.waitKey(0)
+cap.release()
+cv2.destroyAllWindows ()
